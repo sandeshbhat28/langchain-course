@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 
 load_dotenv()
 
@@ -21,10 +22,17 @@ Born into a wealthy family in Pretoria, South Africa, Musk emigrated in 1989 to 
     summary_prompt_template = PromptTemplate(
             input_variables = ["information"], template = summary_template)
 
-    llm = ChatOpenAI(
-        model="gpt-4o-mini-2024-07-18",
+    # llm = ChatOpenAI(
+    #     model="gpt-4o-mini-2024-07-18",
+    #     temperature=None,
+    # )
+
+    llm = ChatOllama(
+        model="llama3.2:3b",
         temperature=None,
     )
+
+
 
     chain = summary_prompt_template | llm
 
