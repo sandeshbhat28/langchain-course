@@ -8,6 +8,7 @@ from langchain_ollama import ChatOllama
 
 load_dotenv()
 
+
 def main():
     print("hello from langchain course")
 
@@ -28,11 +29,9 @@ Born into a wealthy family in Pretoria, South Africa, Musk emigrated in 1989 to 
     # )
 
     llm = ChatOllama(
-        model="llama3.2:3b",
+        model="gemma3:4b",
         temperature=None,
     )
-
-
 
     chain = summary_prompt_template | llm
 
