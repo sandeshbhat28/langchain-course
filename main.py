@@ -1,5 +1,6 @@
 import os
 from re import search
+from typing import List
 
 from dotenv import load_dotenv
 from langchain.agents import create_agent
@@ -9,8 +10,21 @@ from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 #from tavily import TavilyClient
 from langchain_tavily import TavilySearch
+from pydantic import BaseModel, Field
 
 load_dotenv()
+
+class Source(BaseModel):
+    """schema for a source used by agent"""
+
+    url:str = Field(description="The url of the source")
+
+class AgentResponse(BaseModel):
+    """"schema for the agent response with answer and sources"""
+
+    answer:str = Field(description="The agent's answer to the query")
+    sources:List[Source] = Field(description = "sources used to get answer")
+
 
 # Tavily Client used if we want to write our tool decorator function.
 # Else go with inbuilt TavilySearch
@@ -37,14 +51,14 @@ tools = [TavilySearch()]
 # else go with own tools capabilities
 #tools = [search]
 
-agent = create_agent(model=llm, tools=tools)
+agent = create_agent(model=llm, tools=tools, response_format=AgentResponse)
 
 
 def main():
     print("hello from langchain course")
     result = agent.invoke({"messages": [HumanMessage(
-        content="i want to search for 3 top tosca job openings in usa oregon(portland, beaverton, hillsboro)  on linkedin and list their details ?")]})
-    print(result["messages"][-1].content)
+        content="i want to search for 3 top sap specific tosca job openings in usa posted in last 4 hours on linkedin and list their details ?")]})
+    print(result)
 
 
 if __name__ == "__main__":
